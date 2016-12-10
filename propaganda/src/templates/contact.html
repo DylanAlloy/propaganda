@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+<div class='row'>
+<div class='col-sm-6 col-sm-offset-3'>
+<h1>Contact</h1>
+</hr>
+ <form method='POST' action='{% url "auth_login" %}'>{% csrf_token %}
+              <div class='form-group'>
+                  <input type='email' class='form-control' name='email' placeholder='you@domain.ext' /> 
+              </div>
+              <div class='form-group'>
+                  <input type='text' class='form-control' name='full_name' placeholder='your name' />
+              </div>
+              <div class='form-group'>
+                  <input type='text' class='form-control' name='full_name' placeholder="What's up?" />
+              </div>
+              <button type='submit' class='btn btn-default'>Reach out!</button>
+          </form>
+</div>
+
+</div>
+
+
+{% endblock %}

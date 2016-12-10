@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block head_title %} Add Reddit Account | {{ block.super }}{% endblock %}
+
+<style>
+    {% block style %}
+        .navbar-static-top {
+            margin-bottom: 0px !important;
+        }
+    {% endblock %}
+</style>
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="container marketing">
+
+        <div class="col-md-4">
+            <h1>
+                <center>Add reddit account</center></h1>
+            <small><center><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> get your key(s) at <a href="http://reddit.com/prefs/apps" target="_blank">reddit/prefs/apps</center></a>
+            </small>
+
+            <hr>
+            <form method='POST' action="{% url 'add_account' %}">
+                {% csrf_token %}
+                {{form|crispy}}
+                <input type='submit' value='Add'/>
+            </form>
+
+        </div>
+
+        <div class="col-md-4">
+            <form method='POST' action="{% url 'make_active' %}">
+                <center><h1>Your accounts</h1>
+                    <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> reddit name, your tag</small>
+                    <hr>
+                    {% if accounts %}
+                        <b>
+                            <div class="col-md-6">
+
+                                {% csrf_token %}
+                                {% for a in accounts %}
+                                    <ul>
+                                        <input type="radio" id="account{{ forloop.counter }}" name="account" value="{{ a.user_name }}"/>
+                                        {% if a.is_active %}
+                                            <font color="green"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></font>
+                                        {% endif %}
+                                        {{a.user_name}}
+                                    </ul><br>
+                                {% endfor %}
+                            </div>
+                        </b>
+
+                        <div class="col-md-4">
+                            <ul>
+                                {% for t in tags %}
+                                    {{t}}
+                                {% endfor %}
+                            </ul>
+                            <br>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="submit" value='make active'></input>
+                            <br>
+                            <br>
+                            <input type="submit" value='delete'></input>
+
+
+                        </div>
+                    {% else %}
+                        You have not yet connected any accounts. Use the form to add one and be sure to use <a href="http://reddit.com/prefs/apps">reddit apps</a> to get your key.
+                        <br>
+                    {% endif %}
+
+                </center>
+
+            </form>
+        </div>
+
+
+        <div class="col-md-4">
+            <center><h1>Recent activity</h1>
+                <small><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> past month</small>
+                <hr><center>
+                    <ul>
+                        {% for a in accounts %}
+                            
+                                <font color="green"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></font> {{a.user_name}} -
+
+
+                                {{a.timestamp}}
+                            
+                        {% endfor %}
+                    </ul><br>
+
+
+                </center>
+        </div>
+</div>
+    {% endif %}
+{% if not request.user.is_authenticated %}
+
+    <center><h1>GET OUT NOW</h1>
+        <script type="text/javascript">
+            window.onload=function() {
+                function countdown() {
+                    if ( typeof countdown.counter == 'undefined' ) {
+                        countdown.counter = 2; // initial count
+                    }
+                    if(countdown.counter > 0) {
+                        document.getElementById('count').innerHTML = countdown.counter--;
+                        setTimeout(countdown, 1000);
+                    }
+                    else {
+                        location.href = '/';
+                    }
+                }
+                countdown();
+            };
+        </script>
+        <center>You will be redirected in <span id="count"></span> seconds.</center>
+
+    </center>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,76 @@
+   {% load staticfiles %}
+
+   <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand"><img src="{% static 'img/logo.png' %}" style="max-width:40px;margin-top:-7px;"/></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+           {% if not request.user.is_authenticated %}
+            <li><a href="{% url 'home' %}">Home</a></li>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="#">Support</a></li>
+
+            {% endif %}
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+          </ul>
+
+
+          <ul class="nav navbar-nav navbar-right">
+          {% if request.user.is_authenticated %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{user.username}} <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Preferences</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Records</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">reddit accounts</li>
+                
+              <!-- show accounts -->
+                {% if accounts %}
+                  {% for a in accounts %} 
+                    <li><a href=""><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span> - {{a}}</a></li>
+                  {% endfor %}
+                {% else %}
+                  <li class="dropdown-header"><i>You have not connected any reddit accounts</i></li>
+                {% endif %}
+              
+              
+                <li class="dropdown-header"><a href="{% url 'panel' %}">add new <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'registration_register' %}">Register</a></li>
+            {% endif %}
+          </ul>
+
+          {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
+            <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token %}
+              <div class='form-group'>
+                  <input type='text' class='form-control' name='username' placeholder='Username' /> 
+              </div>
+              <div class='form-group'>
+                  <input type='password' class='form-control' name='password' placeholder='Password' />
+              </div>
+              <button type='submit' class='btn btn-default'>Login</button>
+          </form>
+          {% endif %}
+
+
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>

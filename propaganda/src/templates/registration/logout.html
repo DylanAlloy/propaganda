@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<center>
+<p class='text-align-center lead'>You have successfully logged out.</p><p class='text-align-center lead'><a href="{% url 'auth_login' %}">Login</a></p></p><script type="text/javascript">
+window.onload=function() {
+function countdown() {
+if ( typeof countdown.counter == 'undefined' ) {
+    countdown.counter = 2; // initial count
+    }
+if(countdown.counter > 0) {
+  document.getElementById('count').innerHTML = countdown.counter--;
+    setTimeout(countdown, 1000);
+    }
+else {
+    location.href = '/';
+    }
+}
+countdown();
+};
+</script>
+<center>You will be redirected in <span id="count"></span> seconds.</center></center>
+{% endblock %}

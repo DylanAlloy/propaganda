@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block head_title %}Dashboard | {{ block.super }}{% endblock %}
+
+<style>
+{% block style %}
+.navbar-static-top {
+	margin-bottom: 0px !important;
+}
+.jumbotron {
+	background-color:#0E3D14;
+	color: #FFF;
+}
+{% endblock %}
+</style>
+{% block dashboard %}
+{% if request.user.is_authenticated %}
+<br>
+<div class="container marketing">
+<div class="col-md-4">
+<h2>Welcome, {{ user.username }}</h2><hr>
+<center><b>Reddit Status:
+{% if status == 'Online' %} <font color="green"><i>{{ status|safe }}</i></font>
+{% else %}
+<font color="red"><i>{{status|safe}}</i></font>
+{% endif %}</b>
+{% for a in accounts %}<br><br>
+{{a}}
+<br>
+{% endfor %}</center>
+{{ karma|safe }}
+</div>
+<div class="col-md-8"><br>
+<script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.js"></script>
+<link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.3.min.css">
+{{ the_div|safe }}
+{{ the_script|safe }}
+</div>
+
+<script src="https://www.reddit.com/new/.embed?limit=20&t=all&sort=new&twocolumn=true" type="text/javascript"></script>
+
+</div>
+{% endif %}
+{% endblock %}
+{% block content %}
+{% if not request.user.is_authenticated %}
+
+<center><h1>GET OUT NOW</h1>
+<script type="text/javascript">
+window.onload=function() {
+function countdown() {
+if ( typeof countdown.counter == 'undefined' ) {
+    countdown.counter = 2; // initial count
+    }
+if(countdown.counter > 0) {
+  document.getElementById('count').innerHTML = countdown.counter--;
+    setTimeout(countdown, 1000);
+    }
+else {
+    location.href = '/';
+    }
+}
+countdown();
+};
+</script>
+<center>You will be redirected in <span id="count"></span> seconds.</center>
+
+</center>
+{% endif %}
+{% endblock %}
+
